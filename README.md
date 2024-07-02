@@ -20,10 +20,6 @@ The database uses a star schema optimized for queries on song play analysis. Thi
 4. **artists** - artists in music database
 5. **time** - timestamps of records in songplays broken down into specific units
 
-## How to Run
-1. Run `create_tables.py` to create the database and tables.
-2. Run `etl.py` to process and load the data into the tables.
-
 ## Requirements
 - Python 3.x
 - PostgreSQL
