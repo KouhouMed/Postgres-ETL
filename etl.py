@@ -89,6 +89,30 @@ def process_data(cur, conn, filepath, func):
         conn.commit()
         print('{}/{} files processed.'.format(i, num_files))
 
+def check_data_quality(df, table_name):
+    """
+    Perform data quality checks on the dataframe before insertion
+    """
+    print(f"Performing data quality checks for {table_name}")
+    
+    total_rows = len(df)
+    null_counts = df.isnull().sum()
+    
+    print(f"Total rows: {total_rows}")
+    print("Null value counts:")
+    print(null_counts)
+    
+    if table_name == 'songs':
+        # Check for negative years or durations
+        invalid_years = df[df['year'] < 0].shape[0]
+        invalid_durations = df[df['duration'] <= 0].shape[0]
+        print(f"Songs with invalid years: {invalid_years}")
+        print(f"Songs with invalid durations: {invalid_durations}")
+    
+    # Add more specific checks for other tables as needed
+
+# Call this function before inserting data in process_song_file and process_log_file
+
 
 def main():
     """
