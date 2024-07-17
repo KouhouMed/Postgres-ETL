@@ -35,8 +35,3 @@ The project uses two datasets:
 1. Process song data to populate the songs and artists tables.
 2. Process log data to populate the time and users tables.
 3. Use data from both song and log datasets to populate the songplays fact table.
-
-## Future Improvements
-- Add data quality checks
-- Create more analytics queries
-- Implement data visualization
