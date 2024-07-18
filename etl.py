@@ -4,6 +4,7 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 import logging
+import time
 
 
 def process_song_file(cur, filepath):
@@ -84,11 +85,16 @@ def process_data(cur, conn, filepath, func):
     num_files = len(all_files)
     print('{} files found in {}'.format(num_files, filepath))
 
+    start_time = time.time()
+
     # iterate over files and process
     for i, datafile in enumerate(all_files, 1):
         func(cur, datafile)
         conn.commit()
         print('{}/{} files processed.'.format(i, num_files))
+    end_time = time.time()
+    processing_time = end_time - start_time
+    logging.info(f"Processed {num_files} files in {processing_time:.2f} seconds")
 
 def check_data_quality(df, table_name):
     """
