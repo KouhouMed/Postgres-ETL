@@ -23,6 +23,11 @@ def process_song_file(cur, filepath):
                        'artist_latitude', 'artist_longitude']].values[0])
     cur.execute(artist_table_insert, artist_data)
 
+# function to handle incremental loads
+def get_max_timestamp(cur, table):
+    query = f"SELECT MAX(start_time) FROM {table}"
+    cur.execute(query)
+    return cur.fetchone()[0]
 
 def process_log_file(cur, filepath):
      """
@@ -33,6 +38,13 @@ def process_log_file(cur, filepath):
 
     # filter by NextSong action
     df = df[df['page'] == 'NextSong']
+
+    # Get the max timestamp from the existing data
+    max_timestamp = get_max_timestamp(cur, 'songplays')
+    
+    # Filter the dataframe to include only new records
+    if max_timestamp:
+        df = df[df['ts'] > max_timestamp]
 
     # convert timestamp column to datetime
     t = pd.to_datetime(df['ts'])
