@@ -3,6 +3,7 @@ import glob
 import psycopg2
 import pandas as pd
 from sql_queries import *
+import logging
 
 
 def process_song_file(cur, filepath):
@@ -113,7 +114,9 @@ def check_data_quality(df, table_name):
 
 # Call this function before inserting data in process_song_file and process_log_file
 
-
+# Set up logging
+logging.basicConfig(filename='etl.log', level=logging.INFO,
+                    format='%(asctime)s:%(levelname)s:%(message)s')
 def main():
     """
     - Establishes connection with the sparkify database and gets
@@ -121,14 +124,18 @@ def main():
     
     - Runs ETL pipelines
     """
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
-    cur = conn.cursor()
+    try :
+        conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
+        cur = conn.cursor()
 
-    process_data(cur, conn, filepath='data/song_data', func=process_song_file)
-    process_data(cur, conn, filepath='data/log_data', func=process_log_file)
+        process_data(cur, conn, filepath='data/song_data', func=process_song_file)
+        process_data(cur, conn, filepath='data/log_data', func=process_log_file)
 
-    conn.close()
-
+        conn.close()
+        logging.info("ETL process completed successfully")
+    except Exception as e:
+        logging.error(f"Error in ETL process: {str(e)}")
+        raise
 
 if __name__ == "__main__":
     main()
